@@ -34,6 +34,9 @@
 								<td>{{item.CreatedAt.format('d-m-Y, h:i A')}}</td>
 
 								<td class="text-center">
+									<a href="{{url('login_user',{'loginId':item.id})}}" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" title="Login as {{item.username}}">
+										<i class="fa fa-arrow-right"></i>
+									</a>
 
 									<a href="{{url('edit_user',{'id':item.id})}}" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" title="Edit {{title}}">
 										<i class="fa fa-edit"></i>
