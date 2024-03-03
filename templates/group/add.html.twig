@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="content">
+		<h2 class="content-heading">{{title}}</h2>
+
+		<div class="block block-rounded">
+			<div class="block-header block-header-default">
+				<h3 class="block-title">
+					{{title}}
+				</h3>
+				<a href="{{url('view_group')}}" class="btn btn-alt-primary btn-sm" data-bs-toggle="tooltip" title="View {{title}}">
+					<i class="fa fa-list"></i>
+				</a>
+			</div>
+			<div class="block-content block-content-full">
+				<form {% if group is defined %} action="{{ url('update_group',{'id':group.id}) }}" {% else %} action="{{ url('create_group') }}" {% endif %} method="post" enctype='multipart/form-data'>
+					{% if group is defined %}
+						<input type="hidden" name="token" value="{{ csrf_token('update_group') }}">
+					{% else %}
+						<input type="hidden" name="token" value="{{ csrf_token('create_group') }}">
+					{% endif %}
+					<div class="form-group">
+						<label for="">Name</label>
+						<input name="name" placeholder="Name" {% if group is defined %} value="{{group.v}}" {% endif %} type="text" class="form-control">
+					</div>
+                    <div class="form-group">
+                      <label class="form-label" for="users">Users <span class="text-danger">*</span></label>
+                      <select class="select2 form-select" id="users" name="users[]" style="width: 100%;" multiple data-placeholder="Add Users..">
+                        <option></option>
+                        {% for user in users %}
+                            <option value="{{user.id}}">{{user.username}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+					<div class="form-group text-right">
+						<button class="btn btn-secondary btn-sm">
+							<i class="fa fa-save"></i>
+							Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!-- END Dynamic Table with Export Buttons -->
+	</div>
+{% endblock %}

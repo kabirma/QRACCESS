@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+		<title>QRACCESS: WEB CONTROL PANEL</title>
+
+		<meta name="description" content="QRACCESS: WEB CONTROL PANEL created by pixelcave and published on Themeforest">
+		<meta name="author" content="pixelcave">
+		<meta
+		name="robots" content="noindex, nofollow">
+
+		<!-- Open Graph Meta -->
+		<meta property="og:title" content="QRACCESS: WEB CONTROL PANEL">
+		<meta property="og:site_name" content="Codebase">
+		<meta property="og:description" content="QRACCESS: WEB CONTROL PANEL created by pixelcave and published on Themeforest">
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="">
+		<meta property="og:image" content="">
+
+		<!-- Icons -->
+		<!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
+		<link rel="shortcut icon" href="{{ asset('assets/media/favicons/favicon.png') }}"> <link rel="icon" type="image/png" sizes="192x192" href="assets/media/favicons/favicon-192x192.png">
+		<link
+		rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/media/favicons/apple-touch-icon-180x180.png') }}">
+		<!-- END Icons -->
+		<link rel="stylesheet" href="{{ asset('assets/js/plugins/sweetalert2/sweetalert2.min.css') }}">
+
+		<!-- Stylesheets -->
+		<!-- Page JS Plugins CSS -->
+		<link rel="stylesheet" href="{{ asset('assets/js/plugins/datatables-bs5/css/dataTables.bootstrap5.min.css') }}"> <link rel="stylesheet" href="{{ asset('assets/js/plugins/datatables-buttons-bs5/css/buttons.bootstrap5.min.css') }}">
+		<link rel="stylesheet" href="{{ asset('assets/js/plugins/datatables-responsive-bs5/css/responsive.bootstrap5.min.css') }}">
+
+		<link
+		rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+		<!-- Codebase framework -->
+		<link rel="stylesheet" href="{{asset('assets/js/plugins/select2/css/select2.css') }}">
+		<link rel="stylesheet" id="css-main" href="{{ asset('assets/css/codebase.min.css') }}">
+
+		<!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
+		<!-- <link rel="stylesheet" id="css-theme" href="assets/css/themes/flat.min.css"> -->
+		<!-- END Stylesheets -->{% block stylesheets %}
+		{% endblock %}
+
+			{% block javascripts %}
+				{% block importmap %}
+			{{ importmap('app') }}
+		{% endblock %}
+		{% endblock %}
+			<style>
+.form-group {
+	margin-bottom: 1.5%;
+}
+	</style>
+	</head>
+		<body>
+			<div id="page-container" class="sidebar-o enable-page-overlay side-scroll page-header-fixed page-header-modern main-content-boxed"> <!-- Side Overlay-->
+
+			<!-- END Side Overlay -->
+
+			<!-- Sidebar -->
+			<!--
+																																							                Helper classes
+																																							        
+																																							                Adding .smini-hide to an element will make it invisible (opacity: 0) when the sidebar is in mini mode
+																																							                Adding .smini-show to an element will make it visible (opacity: 1) when the sidebar is in mini mode
+																																							                    If you would like to disable the transition, just add the .no-transition along with one of the previous 2 classes
+																																							        
+																																							                Adding .smini-hidden to an element will hide it when the sidebar is in mini mode
+																																							                Adding .smini-visible to an element will show it only when the sidebar is in mini mode
+																																							                Adding 'smini-visible-block' to an element will show it (display: block) only when the sidebar is in mini mode
+																																							            -->
+				<nav
+				id="sidebar"> <!-- Sidebar Content -->
+				<div
+					class="sidebar-content">
+					<!-- Side Header -->
+					<div
+						class="content-header justify-content-lg-center">
+						<!-- Logo -->
+						<div>
+							<span class="smini-visible fw-bold tracking-wide fs-lg">
+								c<span class="text-primary">b</span>
+							</span>
+							<a class="link-fx fw-bold tracking-wide mx-auto" href="{{url('dashboard')}}">
+								<span class="smini-hidden">
+									<i class="fa fa-fire text-primary"></i>
+									<span class="fs-4 text-dual">QR</span>
+									<span class="fs-4 text-primary">ACCESS</span>
+								</span>
+							</a>
+						</div>
+						<!-- END Logo -->
+
+						<!-- Options -->
+						<div>
+							<!-- Close Sidebar, Visible only on mobile screens -->
+							<!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+								<button type="button" class="btn btn-sm btn-alt-danger d-lg-none" data-toggle="layout" data-action="sidebar_close"> <i class="fa fa-fw fa-times"></i>
+							</button>
+							<!-- END Close Sidebar -->
+						</div>
+						<!-- END Options -->
+					</div>
+					<!-- END Side Header -->
+
+					<!-- Sidebar Scrolling -->
+					<div
+						class="js-sidebar-scroll">
+						<!-- Side User -->
+						<div
+							class="content-side content-side-user px-0 py-0">
+							<!-- Visible only in mini mode -->
+							<div class="smini-visible-block animated fadeIn px-3">
+								<img class="img-avatar img-avatar32" src="{{ asset('assets/logo.png') }}" alt="">
+							</div>
+							<!-- END Visible only in mini mode -->
+
+							<!-- Visible only in normal mode -->
+							<div class="smini-hidden text-center mx-auto">
+								<a class="img-link" href="{{url('dashboard')}}">
+									<img class="img-avatar" src="{{ asset('assets/logo.png') }}" alt="">
+								</a>
+								<ul class="list-inline mt-3 mb-0">
+									<li class="list-inline-item">
+										<a class="link-fx text-dual fs-sm fw-semibold text-uppercase" href="{{url('dashboard')}}">{{app.user.getUsername()}}</a>
+									</li>
+									<li
+										class="list-inline-item">
+										<!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+										<a class="link-fx text-dual" data-toggle="layout" data-action="dark_mode_toggle" href="javascript:void(0)">
+											<i class="fa fa-burn"></i>
+										</a>
+									</li>
+									<li class="list-inline-item">
+										<a class="link-fx text-dual" href="{{url('logout')}}">
+											<i class="fa fa-sign-out-alt"></i>
+										</a>
+									</li>
+								</ul>
+							</div>
+							<!-- END Visible only in normal mode -->
+						</div>
+						<!-- END Side User -->
+
+						<!-- Side Navigation -->
+						<div class="content-side content-side-full">
+							<ul class="nav-main">
+
+								{% if 'ROLE_USER' in app.user.getRoles() %}
+									<li class="nav-main-item">
+										<a class="nav-main-link" href="{{url('user_dashboard')}}">
+											<i class="nav-main-link-icon fa fa-house-user"></i>
+											<span class="nav-main-link-name">Dashboard</span>
+										</a>
+									</li>
+									<li class="nav-main-item">
+										<a class="nav-main-link" href="{{url('profile')}}">
+											<i class="nav-main-link-icon fa fa-user"></i>
+											<span class="nav-main-link-name">Profile</span>
+										</a>
+									</li>
+
+									<li class="nav-main-item">
+										<a class="nav-main-link" href="{{url('my_group')}}">
+											<i class="nav-main-link-icon fa fa-users"></i>
+											<span class="nav-main-link-name">My Groups</span>
+										</a>
+									</li>
+								{% endif %}
+
+								{% if 'ROLE_ADMIN' in app.user.getRoles() %}
+
+									<li class="nav-main-item">
+										<a class="nav-main-link" href="{{url('dashboard')}}">
+											<i class="nav-main-link-icon fa fa-house-user"></i>
+											<span class="nav-main-link-name">Dashboard</span>
+										</a>
+									</li>
+									<li class="nav-main-heading">Users</li>
+									<li class="nav-main-item">
+										<a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+											<i class="nav-main-link-icon fa fa-user"></i>
+											<span class="nav-main-link-name">Users</span>
+										</a>
+										<ul class="nav-main-submenu">
+											<li class="nav-main-item">
+												<a class="nav-main-link" href="{{ url('view_user') }}">
+													<span class="nav-main-link-name">View</span>
+												</a>
+											</li>
+											<li class="nav-main-item">
+												<a class="nav-main-link" href="{{ url('add_user') }}">
+													<span class="nav-main-link-name">Add</span>
+												</a>
+											</li>
+										</ul>
+									</li>
+
+									<li class="nav-main-heading">Groups</li>
+									<li class="nav-main-item">
+										<a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+											<i class="nav-main-link-icon fa fa-users"></i>
+											<span class="nav-main-link-name">Groups</span>
+										</a>
+										<ul class="nav-main-submenu">
+											<li class="nav-main-item">
+												<a class="nav-main-link" href="{{ url('view_group') }}">
+													<span class="nav-main-link-name">View</span>
+												</a>
+											</li>
+											<li class="nav-main-item">
+												<a class="nav-main-link" href="{{ url('add_group') }}">
+													<span class="nav-main-link-name">Add</span>
+												</a>
+											</li>
+										</ul>
+									</li>
+								{% endif %}
+
+							</ul>
+						</div>
+						<!-- END Side Navigation -->
+					</div>
+					<!-- END Sidebar Scrolling -->
+				</div>
+				<!-- Sidebar Content -->
+			</nav>
+			<!-- END Sidebar -->
+
+			<!-- Header -->
+			<header
+				id="page-header">
+				<!-- Header Content -->
+				<div
+					class="content-header">
+					<!-- Left Section -->
+					<div class="space-x-1">
+						<!-- Toggle Sidebar -->
+						<!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+							<button type="button" class="btn btn-sm btn-alt-secondary" data-toggle="layout" data-action="sidebar_toggle"> <i class="fa fa-fw fa-bars"></i>
+						</button>
+						<!-- END Toggle Sidebar -->
+
+					</div>
+					<!-- END Left Section -->
+
+					<!-- Right Section -->
+					<div
+						class="space-x-1">
+						<!-- User Dropdown -->
+						<div class="dropdown d-inline-block">
+							<button type="button" class="btn btn-sm btn-alt-secondary" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="fa fa-user d-sm-none"></i>
+								<span class="d-none d-sm-inline-block fw-semibold">{{app.user.getUsername()}}</span>
+								<i class="fa fa-angle-down opacity-50 ms-1"></i>
+							</button>
+							<div class="dropdown-menu dropdown-menu-md dropdown-menu-end p-0" aria-labelledby="page-header-user-dropdown">
+								<div class="px-2 py-3 bg-body-light rounded-top">
+									<h5 class="h6 text-center mb-0">
+										{{app.user.getEmail()}}
+									</h5>
+								</div>
+								<div class="p-2">
+									<a class="dropdown-item d-flex align-items-center justify-content-between space-x-1" href="{{url('profile')}}">
+										<span>Profile</span>
+										<i class="fa fa-fw fa-user opacity-25"></i>
+									</a>
+
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item d-flex align-items-center justify-content-between space-x-1" href="{{url('logout')}}">
+										<span>Sign Out</span>
+										<i class="fa fa-fw fa-sign-out-alt opacity-25"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+						<!-- END User Dropdown -->
+
+						<!-- Notifications -->
+						<div class="dropdown d-inline-block">
+							<button type="button" class="btn btn-sm btn-alt-secondary" id="page-header-notifications" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="fa fa-flag"></i>
+								<span class="text-primary">&bull;</span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" aria-labelledby="page-header-notifications">
+								<div class="px-2 py-3 bg-body-light rounded-top">
+									<h5 class="h6 text-center mb-0">
+										Notifications
+									</h5>
+								</div>
+								<ul class="nav-items my-2 fs-sm">
+									<li>
+										<a class="text-dark d-flex py-2" href="javascript:void(0)">
+											<div class="flex-shrink-0 me-2 ms-3">
+												<i class="fa fa-fw fa-check text-success"></i>
+											</div>
+											<div class="flex-grow-1 pe-2">
+												<p class="fw-medium mb-1">You’ve upgraded to a VIP account successfully!</p>
+												<div class="text-muted">15 min ago</div>
+											</div>
+										</a>
+									</li>
+									<li>
+										<a class="text-dark d-flex py-2" href="javascript:void(0)">
+											<div class="flex-shrink-0 me-2 ms-3">
+												<i class="fa fa-fw fa-exclamation-triangle text-warning"></i>
+											</div>
+											<div class="flex-grow-1 pe-2">
+												<p class="fw-medium mb-1">Please check your payment info since we can’t validate them!</p>
+												<div class="text-muted">50 min ago</div>
+											</div>
+										</a>
+									</li>
+									<li>
+										<a class="text-dark d-flex py-2" href="javascript:void(0)">
+											<div class="flex-shrink-0 me-2 ms-3">
+												<i class="fa fa-fw fa-times text-danger"></i>
+											</div>
+											<div class="flex-grow-1 pe-2">
+												<p class="fw-medium mb-1">Web server stopped responding and it was automatically restarted!</p>
+												<div class="text-muted">4 hours ago</div>
+											</div>
+										</a>
+									</li>
+									<li>
+										<a class="text-dark d-flex py-2" href="javascript:void(0)">
+											<div class="flex-shrink-0 me-2 ms-3">
+												<i class="fa fa-fw fa-exclamation-triangle text-warning"></i>
+											</div>
+											<div class="flex-grow-1 pe-2">
+												<p class="fw-medium mb-1">Please consider upgrading your plan. You are running out of space.</p>
+												<div class="text-muted">16 hours ago</div>
+											</div>
+										</a>
+									</li>
+									<li>
+										<a class="text-dark d-flex py-2" href="javascript:void(0)">
+											<div class="flex-shrink-0 me-2 ms-3">
+												<i class="fa fa-fw fa-plus text-primary"></i>
+											</div>
+											<div class="flex-grow-1 pe-2">
+												<p class="fw-medium mb-1">New purchases! +$250</p>
+												<div class="text-muted">1 day ago</div>
+											</div>
+										</a>
+									</li>
+								</ul>
+								<div class="p-2 bg-body-light rounded-bottom">
+									<a class="dropdown-item text-center mb-0" href="javascript:void(0)">
+										<i class="fa fa-fw fa-flag opacity-50 me-1"></i>
+										View All
+									</a>
+								</div>
+							</div>
+						</div>
+						<!-- END Notifications -->
+					</div>
+					<!-- END Right Section -->
+				</div>
+				<!-- END Header Content -->
+
+				<!-- Header Search -->
+				<div id="page-header-search" class="overlay-header bg-body-extra-light">
+					<div class="content-header">
+						<form class="w-100" action="be_pages_generic_search.html" method="POST">
+							<div class="input-group">
+								<!-- Close Search Section -->
+								<!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+									<button type="button" class="btn btn-secondary" data-toggle="layout" data-action="header_search_off"> <i class="fa fa-fw fa-times"></i>
+								</button>
+								<!-- END Close Search Section -->
+								<input type="text" class="form-control" placeholder="Search or hit ESC.." id="page-header-search-input" name="page-header-search-input">
+								<button type="submit" class="btn btn-secondary">
+									<i class="fa fa-fw fa-search"></i>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+				<!-- END Header Search -->
+
+				<!-- Header Loader -->
+				<!-- Please check out the Activity page under Elements category to see examples of showing/hiding it -->
+					<div id="page-header-loader" class="overlay-header bg-primary"> <div class="content-header">
+						<div class="w-100 text-center">
+							<i class="far fa-sun fa-spin text-white"></i>
+						</div>
+					</div>
+				</div>
+				<!-- END Header Loader -->
+			</header>
+			<!-- END Header -->
+
+			<!-- Main Container -->
+			<main
+				id="main-container">
+				<!-- Page Content -->
+				{% block body %}{% endblock %}
+				<!-- END Page Content -->
+			</main>
+			<!-- END Main Container -->
+
+			<!-- Footer -->
+			<footer id="page-footer">
+				<div class="content py-3">
+					<div class="row fs-sm">
+						<div class="col-sm-6 order-sm-2 py-1 text-center text-sm-end">
+							Crafted with
+							<i class="fa fa-heart text-danger"></i>
+							by
+							<a class="fw-semibold" href="https://1.envato.market/ydb" target="_blank">Techotics</a>
+						</div>
+						<div class="col-sm-6 order-sm-1 py-1 text-center text-sm-start">
+							<a class="fw-semibold" href="#0" target="_blank">QR ACCESS</a>
+							&copy;
+							<span data-toggle="year-copy"></span>
+						</div>
+					</div>
+				</div>
+			</footer>
+			<!-- END Footer -->
+		</div>
+		<!-- END Page Container -->
+
+		<!--
+																										            Codebase JS
+																										    
+																										            Core libraries and functionality
+																										            webpack is putting everything together at assets/_js/main/app.js
+																										        -->
+		<script src="{{ asset('assets/js/codebase.app.min.js') }}"></script>
+
+		<!-- jQuery (required for DataTables plugin) -->
+		<script src="{{ asset('assets/js/lib/jquery.min.js') }}"></script>
+		<!-- Page JS Plugins -->
+		<script src="{{ asset('assets/js/plugins/chart.js/chart.umd.js') }}"></script>
+
+		<!-- Page JS Code -->
+		<script src="{{ asset('assets/js/pages/be_pages_dashboard.min.js') }}"></script>
+
+		<script src="{{ asset('assets/js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+		<script src="{{ asset('assets/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
+		<script src="{{ asset('assets/js/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+		<script src="{{ asset('assets/js/plugins/datatables-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
+		<script src="{{ asset('assets/js/plugins/datatables-buttons/dataTables.buttons.min.js') }}"></script>
+		<script src="{{ asset('assets/js/plugins/datatables-buttons-bs5/js/buttons.bootstrap5.min.js') }}"></script>
+		<script src="{{ asset('assets/js/plugins/datatables-buttons-jszip/jszip.min.js') }}"></script>
+		<script src="{{ asset('assets/js/plugins/datatables-buttons-pdfmake/pdfmake.min.js') }}"></script>
+		<script src="{{ asset('assets/js/plugins/datatables-buttons-pdfmake/vfs_fonts.js') }}"></script>
+		<script src="{{ asset('assets/js/plugins/datatables-buttons/buttons.print.min.js') }}"></script>
+		<script src="{{ asset('assets/js/plugins/datatables-buttons/buttons.html5.min.js') }}"></script>
+
+		<!-- Page JS Code -->
+		<script src="{{ asset('assets/js/pages/be_tables_datatables.min.js') }}"></script>
+
+		<script src="{{ asset('assets/js/plugins/select2/js/select2.full.min.js') }}"></script>
+
+		<!-- Page JS Helpers (Select2 plugin) -->
+
+		<!-- SweetAlert2 -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
+		{% block script %}{% endblock %}
+
+		<script>
+			$(".select2").select2();{% for label, messages in app.flashes(['success','danger', 'warning']) %}{% for message in messages %}
+swal('{{ label|upper }}!', '{{ message }}', '{{ label }}');{% endfor %}{% endfor %}
+
+
+$(document).on('click', '.delete', function (e) {
+var route = $(this).attr("data-route");
+swal({
+title: "Are you sure?",
+text: "You won't be able to revert this back!",
+icon: "warning",
+showCancelButton: true,
+confirmButtonColor: "#3085d6",
+cancelButtonColor: "#d33",
+confirmButtonText: "Yes, delete it!",
+dangerMode: true
+}).then(function (isConfirm) {
+if (isConfirm) {
+window.location.href = route;
+} else {
+swal("Cancelled", "Your imaginary file is safe :)", "error");
+}
+})
+});
+		</script>
+	</body>
+</html>

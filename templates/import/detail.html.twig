@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="content">
+		<h2 class="content-heading">{{title}}</h2>
+
+		<div class="block block-rounded">
+			<div class="block-header block-header-default">
+				<h3 class="block-title">
+					{{title}}
+				</h3>
+			
+			</div>
+			<div class="block-content block-content-full">
+				<table class="table table-bordered table-striped table-vcenter js-dataTable-buttons">
+					<thead>
+						<tr>
+							<th>S.NO</th>
+							<th>QR</th>
+                            {% for header in headers.getFieldArray() %}
+                                <th>{{header}}</th>
+                            {% endfor %}
+							
+						</tr>
+					</thead>
+					<tbody>
+						{% for key,item in rows %}
+                           
+							<tr>
+								<td>{{key+1}}</td>
+                                <td></td>
+                                {% for data in item.getDataArray() %}
+                                    <td>{{data}}</td>
+                                {% endfor %}
+                                
+
+							</tr>
+
+						{% endfor %}
+
+					</tbody>
+				</table>
+				
+			</div>
+		</div>
+		<!-- END Dynamic Table with Export Buttons -->
+	</div>
+{% endblock %}

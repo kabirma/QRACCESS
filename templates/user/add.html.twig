@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="content">
+		<h2 class="content-heading">Users</h2>
+
+		<div class="block block-rounded">
+			<div class="block-header block-header-default">
+				<h3 class="block-title">
+					{{title}}
+				</h3>
+				<a href="{{url('view_user')}}" class="btn btn-alt-primary btn-sm" data-bs-toggle="tooltip" title="View {{title}}">
+					<i class="fa fa-list"></i>
+				</a>
+			</div>
+			<div class="block-content block-content-full">
+				<form {% if user is defined %} action="{{ url('update_user',{'id':user.id}) }}" {% else %} action="{{ url('create_user') }}" {% endif %} method="post" enctype='multipart/form-data'>
+					{% if user is defined %}
+						<input type="hidden" name="token" value="{{ csrf_token('update_user') }}">
+					{% else %}
+						<input type="hidden" name="token" value="{{ csrf_token('create_user') }}">
+					{% endif %}
+					<div class="form-group">
+						<label for="">Username</label>
+						<input name="username" placeholder="Username" {% if user is defined %} value="{{user.username}}" {% endif %} type="text" class="form-control">
+					</div>
+					<div class="form-group">
+						<label for="">Email</label>
+						<input name="email" {% if user is defined %} value="{{user.email}}" {% endif %} placeholder="Email" type="email" class="form-control">
+					</div>
+					<div class="form-group">
+						<label for="">Password</label>
+						<input name="password" placeholder="Password" type="password" class="form-control">
+					</div>
+
+					<div class="form-group text-right">
+						<button class="btn btn-secondary btn-sm">
+							<i class="fa fa-save"></i>
+							Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!-- END Dynamic Table with Export Buttons -->
+	</div>
+{% endblock %}

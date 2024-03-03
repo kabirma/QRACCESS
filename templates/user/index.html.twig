@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="content">
+		<h2 class="content-heading">{{title}}</h2>
+
+		<div class="block block-rounded">
+			<div class="block-header block-header-default">
+				<h3 class="block-title">
+					{{title}}
+					<small>View</small>
+				</h3>
+				<a href="{{url('add_user')}}" class="btn btn-alt-primary btn-sm" data-bs-toggle="tooltip" title="Add {{title}}">
+					<i class="fa fa-plus"></i>
+				</a>
+			</div>
+			<div class="block-content block-content-full">
+				<table class="table table-bordered table-striped table-vcenter js-dataTable-buttons">
+					<thead>
+						<tr>
+							<th>S.NO</th>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Created At</th>
+							<th class="text-center" style="width: 15%;">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for key,item in records %}
+							<tr>
+								<td>{{key+1}}</td>
+								<td>{{item.username}}</td>
+								<td>{{item.email}}</td>
+								<td>{{item.CreatedAt.format('d-m-Y, h:i A')}}</td>
+
+								<td class="text-center">
+
+									<a href="{{url('edit_user',{'id':item.id})}}" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" title="Edit {{title}}">
+										<i class="fa fa-edit"></i>
+									</a>
+
+									<button type="button" class="btn btn-sm btn-danger delete" data-route="{{url('delete_user',{'id':item.id})}}"  data-bs-toggle="tooltip" title="Delete {{item.username}}">
+										<i class="fa fa-trash"></i>
+									</button>
+
+
+								</td>
+							</tr>
+
+						{% endfor %}
+
+					</tbody>
+				</table>
+			
+			</div>
+		</div>
+		<!-- END Dynamic Table with Export Buttons -->
+	</div>
+{% endblock %}
