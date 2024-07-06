@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<link
+	rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+	<style>
+		.edit_column {
+			cursor: pointer;
+		}
+		.iti--allow-dropdown {
+			width: 100%;
+		}
+	</style>
+	<div class="content">
+		<h2 class="content-heading">{{title}}</h2>
+
+		<div class="block block-rounded">
+			<div class="block-header block-header-default">
+				<h3 class="block-title">
+					{{title}}
+				</h3>
+			
+			</div>
+			<div class="block-content block-content-full">
+				<form method="post" action="{{url("confirm_column")}}">
+					<input type="hidden" name="token" value="{{ csrf_token('confirm_column') }}">
+                    <input type="hidden" name="import_id" value="{{importId}}">
+					<table class="table table-bordered table-striped table-vcenter ">
+						<thead>
+							<tr>
+								<th>S.NO</th>
+								{% for header in headers %}
+
+									<th>
+										<label>
+											{{header['field']}}
+											<input type="hidden" name="header_org[]" value="{{header['id']}}">
+											{% if header['contains_qr'] and 'qr' in header['field']|lower %}
+												<input type="hidden" checked name="header[]" value="{{header['id']}}">
+											{% else %}
+												<input type="checkbox" checked name="header[]" value="{{header['id']}}">
+											{% endif %}
+										</label>
+									</th>
+								{% endfor %}
+							</tr>
+						</thead>
+						<tbody>
+							{% for key,item in rows %}
+
+								<tr>
+									<td>{{key+1}}
+									</td>
+
+									{% for data in item.getDataArray() %}
+										<td>{{data}}</td>
+									{% endfor %}
+
+								</tr>
+
+							{% endfor %}
+
+						</tbody>
+						<tfoot>
+							<td colspan="{{headers|length + 1}}" align="right">
+								<button class="btn btn-success btn-sm">
+									<i class="fa fa-check"></i>
+									Confirm</button>
+								<button class="btn btn-danger btn-sm">
+									<i class="fa fa-times"></i>
+									Cancel</button>
+							</td>
+						</tfoot>
+					</table>
+				</form>
+			</div>
+		</div>
+		<!-- END Dynamic Table with Export Buttons -->
+	</div>
+
+
+{% endblock %}
+
+{% block script %}{% endblock %}

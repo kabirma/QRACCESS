@@ -32,7 +32,7 @@
 						<div class=" mb-4">
 
 							<label for="" class="form-label">Username</label>
-							<input name="username" placeholder="" type="text" class="form-control">
+							<input name="username" placeholder="" required type="text" class="form-control">
 						</div>
 
 						<div class="form-floating mb-4">
@@ -50,6 +50,8 @@
 								<button type="submit" class="btn btn-lg btn-alt-primary w-100 py-3 fw-semibold">
 									Sign Up
 								</button>
+								<hr>
+							<a href="{{ url('login') }}" class="text-danger text-center">Already has a Account? Sign In!</a>
 							</div>
 							{# <div class="col-6">
 								<a class="btn btn-alt-secondary w-100" href="#" data-bs-toggle="modal" data-bs-target="#modal-terms">

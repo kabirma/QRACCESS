@@ -43,7 +43,10 @@ class GroupController extends AbstractController
     public function add()
     {
         $title = 'Add Group';
-        $users = $this->em->getRepository(User::class)->findAll();
+        //$users = $this->em->getRepository(User::class)->findBy(['admin_id'=>$this->getUser()]);
+        $users = $this->em->getRepository(User::class)->createQueryBuilder('u')->where('u.roles like :role')->setParameter('role', '%ROLE_USER%')->andWhere('u.admin_id = :userId')->setParameter('userId',$this->getUser()->getId())->getQuery()->getResult();
+
+     
         return $this->render('group/add.html.twig', ['title' => $title, 'users' => $users]);
     }
 
@@ -64,21 +67,21 @@ class GroupController extends AbstractController
                 'success',
                 'Group Saved Successfully!'
             );
-            return $this->redirectToRoute('view_group');
+            return $this->redirectToRoute('my_group');
         }
 
         $this->addFlash(
             'error',
             'Token Mismatch!'
         );
-        return $this->redirectToRoute('view_group');
+        return $this->redirectToRoute('my_group');
     }
 
     #[Route('user/group/edit/{id}', name: 'edit_group', methods: ['GET'])]
     public function edit($id)
     {
         $title = "Edit Group";
-        $users = $this->em->getRepository(User::class)->findAll();
+        $users = $this->em->getRepository(User::class)->createQueryBuilder('u')->where('u.roles like :role')->setParameter('role', '%ROLE_USER%')->andWhere('u.admin_id = :userId')->setParameter('userId',$this->getUser()->getId())->getQuery()->getResult();
         $group = $this->em->getRepository(Group::class)->find($id);
         return $this->render('group/add.html.twig', ['group' => $group, 'title' => $title, 'users' => $users]);
     }
@@ -100,14 +103,14 @@ class GroupController extends AbstractController
                 'success',
                 'Group Updated Successfully!'
             );
-            return $this->redirectToRoute('view_group');
+            return $this->redirectToRoute('my_group');
         }
 
         $this->addFlash(
             'error',
             'Token Mismatch!'
         );
-        return $this->redirectToRoute('view_group');
+        return $this->redirectToRoute('my_group');
     }
 
     #[Route('user/group/delete/{id}', name: 'delete_group', methods: ['GET'])]
@@ -122,7 +125,7 @@ class GroupController extends AbstractController
             'success',
             'Group Deleted Successfully!'
         );
-        return $this->redirectToRoute('view_group');
+        return $this->redirectToRoute('my_group');
     }
 
 }

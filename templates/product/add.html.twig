@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="content">
+		<h2 class="content-heading">{{title}}</h2>
+
+		<div class="block block-rounded">
+			<div class="block-header block-header-default">
+				<h3 class="block-title">
+					{{title}}
+				</h3>
+				<a href="{{url('view_product')}}" class="btn btn-alt-primary btn-sm" data-bs-toggle="tooltip" title="View {{title}}">
+					<i class="fa fa-list"></i>
+				</a>
+			</div>
+			<div class="block-content block-content-full">
+				<form {% if product is defined %} action="{{ url('update_product',{'id':product.id}) }}" {% else %} action="{{ url('create_product') }}" {% endif %} method="post" enctype='multipart/form-data'>
+					{% if product is defined %}
+						<input type="hidden" name="token" value="{{ csrf_token('update_product') }}">
+					{% else %}
+						<input type="hidden" name="token" value="{{ csrf_token('create_product') }}">
+					{% endif %}
+					<div class="form-group">
+						<label for="">Name</label>
+						<input name="name" placeholder="Name" {% if product is defined %} value="{{product.name}}" {% endif %} required type="text" class="form-control">
+					</div>
+
+					<div class="form-group">
+						<label for="">Price</label>
+						<input name="price" placeholder="Price" {% if product is defined %} value="{{product.price}}" {% endif %} type="number" step="0.1" min="0.1" required class="form-control">
+					</div>
+
+					<div class="form-group">
+						<label for="">Attendees Credit</label>
+						<input name="credit" placeholder="Credit" {% if product is defined %} value="{{product.credit}}" {% endif %} type="number" min="1" required class="form-control">
+					</div>
+
+					<div class="form-group">
+						<label for="">Name</label>
+						<textarea name="description" rows="6" cols="10" class="form-control" placeholder="Description">{% if product is defined %} {{product.description}} {% endif %}</textarea>
+					</div>
+                   
+					<div class="form-group text-right">
+						<button class="btn btn-secondary btn-sm">
+							<i class="fa fa-save"></i>
+							Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!-- END Dynamic Table with Export Buttons -->
+	</div>
+{% endblock %}

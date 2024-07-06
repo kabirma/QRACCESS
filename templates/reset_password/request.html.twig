@@ -1,0 +1,53 @@
+{% extends 'auth/auth_base.html.twig' %}
+
+{% block title %}Reset your password
+{% endblock %}
+
+{% block body %}
+	<main
+		id="main-container">
+		<!-- Page Content -->
+		<div class="bg-gd-dusk">
+			<div
+				class="hero-static content content-full bg-body-extra-light">
+				<!-- Header -->
+				<div class="py-4 px-1 text-center mb-4">
+					<a class="link-fx fw-bold" href="index">
+						<i class="fa fa-fire"></i>
+						<span class="fs-4 text-body-color">QR</span>
+						<span class="fs-4">ACCESS</span>
+					</a>
+					<h1 class="h3 fw-bold mt-5 mb-2">Reset your password</h1>
+				</div>
+				<!-- END Header -->
+
+				<!-- Sign In Form -->
+				<div class="row justify-content-center px-1">
+					<div class="col-sm-8 col-md-6 col-xl-4">
+
+						{% for flash_error in app.flashes('reset_password_error') %}
+							<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+						{% endfor %}
+
+						{{ form_start(requestForm) }}
+						{{ form_row(requestForm.email) }}
+						<div>
+							<small>
+								Enter your email address, and we will send you a link to reset your password.
+							</small>
+						</div>
+						<div class="text-center mt-3">
+							<button class="btn btn-primary">Send password reset email</button>
+							<hr>
+							<a href="{{ url('login') }}" class="text-danger text-center">Try Sign In Again!</a>
+
+						</div>
+						{{ form_end(requestForm) }}
+					</div>
+				</div>
+				<!-- END Sign In Form -->
+			</div>
+		</div>
+		<!-- END Page Content -->
+	</main>
+{% endblock %}

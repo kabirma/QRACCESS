@@ -51,6 +51,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Import::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $imports;
 
+    #[ORM\OneToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
+    private ?self $admin_id = null;
+
+    #[ORM\Column]
+    private ?int $credits = null;
+
     public function __construct()
     {
         $this->groups = new ArrayCollection();
@@ -94,7 +100,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        // $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -222,6 +228,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $import->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAdminId(): ?self
+    {
+        return $this->admin_id;
+    }
+
+    public function setAdminId(?self $admin_id): static
+    {
+        $this->admin_id = $admin_id;
+
+        return $this;
+    }
+
+    public function getCredits(): ?int
+    {
+        return $this->credits;
+    }
+
+    public function setCredits(int $credits): static
+    {
+        $this->credits = $credits;
 
         return $this;
     }

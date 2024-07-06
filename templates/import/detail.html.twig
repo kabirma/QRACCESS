@@ -1,6 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+	<link
+	rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+	<style>
+		.edit_column {
+			cursor: pointer;
+		}
+		.iti--allow-dropdown {
+			width: 100%;
+		}
+	</style>
 	<div class="content">
 		<h2 class="content-heading">{{title}}</h2>
 
@@ -9,40 +21,296 @@
 				<h3 class="block-title">
 					{{title}}
 				</h3>
-			
+				<a href="{{url('single_add_import',{'importId':importId})}}" class="btn btn-alt-primary btn-sm" data-bs-toggle="tooltip" title="Add New">
+					<i class="fa fa-plus"></i>
+				</a>
 			</div>
 			<div class="block-content block-content-full">
-				<table class="table table-bordered table-striped table-vcenter js-dataTable-buttons">
+				<table class="table table-bordered table-striped table-vcenter ">
 					<thead>
 						<tr>
 							<th>S.NO</th>
-							<th>QR</th>
-                            {% for header in headers.getFieldArray() %}
-                                <th>{{header}}</th>
-                            {% endfor %}
-							
+							<th>QR Image</th>
+							{% for header in headers %}
+									<th>{{header['field']}}
+										<i class="fa fa-edit edit_column" data-field="{{header['field']}}" data-export="{{header['is_exportable']}}" data-display="{{header['is_displayable']}}" data-import_id="{{header['import_id']}}" data-id="{{header['id']}}" data-sort="{{header['sort']}}"></i>
+									</th>
+							{% endfor %}
+							<th>Action</th>
 						</tr>
 					</thead>
 					<tbody>
 						{% for key,item in rows %}
-                           
-							<tr>
-								<td>{{key+1}}</td>
-                                <td></td>
-                                {% for data in item.getDataArray() %}
-                                    <td>{{data}}</td>
-                                {% endfor %}
-                                
 
+							<tr>
+								<td>{{key+1}}
+								</td>
+								<td>
+									<img style="height:60px" src="{{ qr_code_url(qr[item.id]) }}" alt="{{qr[item.id]}}"/>
+								</td>
+								{% for data in item.getDataArray() %}
+									<td>{{data}}</td>
+								{% endfor %}
+								<td>
+									<a href="#0" class="btn btn-primary btn-sm send_sms" data-qr_code="{{ qr_code_url(qr[item.id]) }}" {% for data in item.getDataArray() %} data-row_{{loop['index']}}="{{data}}" {% endfor %} data-id="{{item.id}}" data-bs-toggle="modal" data-bs-target="#modal-sms">
+										<i class="fa fa-comment"></i>
+									</a>
+									<a href="#0" class="btn btn-primary btn-sm send_email" data-qr_code="{{ qr_code_url(qr[item.id]) }}" {% for data in item.getDataArray() %} data-row_{{loop['index']}}="{{data}}" {% endfor %} data-id="{{item.id}}" data-bs-toggle="modal" data-bs-target="#modal-email">
+										<i class="fa fa-envelope"></i>
+									</a>
+									<a href="{{url('single_edit_import',{'rowId':item.id})}}" class="btn btn-success btn-sm">
+										<i class="fa fa-edit"></i>
+									</a>
+									<button type="button" class="btn btn-sm btn-danger delete" data-route="{{url('single_delete_import',{'rowId':item.id})}}" data-bs-toggle="tooltip" title="Delete Row">
+										<i class="fa fa-trash"></i>
+									</button>
+								</td>
 							</tr>
 
 						{% endfor %}
 
 					</tbody>
 				</table>
-				
+
 			</div>
 		</div>
 		<!-- END Dynamic Table with Export Buttons -->
 	</div>
+	<div class="modal fade" id="modal-fadein" tabindex="-1" aria-labelledby="modal-fadein" style="display: none;" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<form method="post" action="{{ url('update_columns') }}">
+				<input type="hidden" name="token" value="{{ csrf_token('update_columns') }}">
+				<input type="hidden" name="column_id" id="column_id">
+				<input type="hidden" name="import_id" id="import_id">
+
+				<div class="modal-content">
+					<div class="block block-rounded shadow-none mb-0">
+						<div class="block-header block-header-default">
+							<h3 class="block-title">Update Column</h3>
+							<div class="block-options">
+								<button type="button" class="btn-block-option" data-bs-dismiss="modal" aria-label="Close">
+									<i class="fa fa-times"></i>
+								</button>
+							</div>
+						</div>
+						<div class="block-content fs-sm">
+							<div class="form-group mb-2">
+								<label>Column Name</label>
+								<input type="text" name="field" placeholder="Field Name" id="field_name" class="form-control">
+							</div>
+							<div class="form-group mb-2">
+								<label>
+									<input type="checkbox" name="is_exportable" value="1" id="is_exportable">
+									Is Exportable?
+								</label>
+							</div>
+							<div class="form-group mb-2">
+								<label>
+									<input type="checkbox" name="is_displayable" value="1" id="is_displayable">
+									Is Displayable?
+								</label>
+							</div>
+							<div class="form-group mb-2">
+								<label>Sort</label>
+								<select class="form-control" name="sort" id="sort">
+									{% for sortItem in sort_array %}
+										<option>{{sortItem}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="block-content block-content-full block-content-sm text-end border-top">
+							<button type="button" class="btn btn-alt-secondary" data-bs-dismiss="modal">
+								Close
+							</button>
+							<button class="btn btn-alt-primary">
+								Update
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+
+	<div class="modal fade" id="modal-email" tabindex="-1" aria-labelledby="modal-email" style="display: none;" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<form method="post" action="{{ url('send_email') }}" id="send_email_form">
+				<input type="hidden" name="token" value="{{ csrf_token('send_email') }}">
+				<input type="hidden" name="row_id" id="row_id_email">
+				<input type="hidden" id="code_email" name="code" value="1">
+				<input type="hidden" id="qr_code_email" name="qr_code">
+
+				<div class="modal-content">
+					<div class="block block-rounded shadow-none mb-0">
+						<div class="block-header block-header-default">
+							<h3 class="block-title">Send Email</h3>
+							<div class="block-options">
+								<button type="button" class="btn-block-option" data-bs-dismiss="modal" aria-label="Close">
+									<i class="fa fa-times"></i>
+								</button>
+							</div>
+						</div>
+						<div class="block-content fs-sm">
+							<div class="form-group mb-2">
+								<label>Message
+									<small>(Max Lenght 130 Character)</small>
+								</label>
+								<textarea class="form-control" name="message" rows="5" style="resize:none" columns="30" maxlength="130" placeholder="Enter Message"></textarea>
+							</div>
+
+							<div class="form-group mb-2">
+								<label>Email</label>
+								<input id="email" type="email" class="form-control" name="email">
+							</div>
+
+							<div class="form-group mb-2">
+								<label>Column</label>
+								<select class="form-control" name="column" id="column_select_email">
+									{% for header in headers %}
+										<option value="{{header['field']}}" data-count="{{loop['index']}}">{{header['field']}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="block-content block-content-full block-content-sm text-end border-top">
+							<button type="button" class="btn btn-alt-secondary" data-bs-dismiss="modal">
+								Close
+							</button>
+							<button class="btn btn-alt-primary">
+								Send Email
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modal-sms" tabindex="-1" aria-labelledby="modal-sms" style="display: none;" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<form method="post" action="{{ url('send_sms') }}" id="send_sms_form">
+				<input type="hidden" name="token" value="{{ csrf_token('send_sms') }}">
+				<input type="hidden" name="row_id" id="row_id">
+				<input type="hidden" id="code" name="code" value="1">
+				<input type="hidden" id="qr_code" name="qr_code">
+
+				<div class="modal-content">
+					<div class="block block-rounded shadow-none mb-0">
+						<div class="block-header block-header-default">
+							<h3 class="block-title">Send SMS</h3>
+							<div class="block-options">
+								<button type="button" class="btn-block-option" data-bs-dismiss="modal" aria-label="Close">
+									<i class="fa fa-times"></i>
+								</button>
+							</div>
+						</div>
+						<div class="block-content fs-sm">
+							<div class="form-group mb-2">
+								<label>Message
+									<small>(Max Lenght 130 Character)</small>
+								</label>
+								<textarea class="form-control" name="message" rows="5" style="resize:none" columns="30" maxlength="130" placeholder="Enter Message"></textarea>
+							</div>
+
+							<div class="form-group mb-2">
+								<label>Phone Number</label>
+								<input id="phone" type="tel" class="form-control" name="phone">
+							</div>
+
+							<div class="form-group mb-2">
+								<label>Column</label>
+								<select class="form-control" name="column" id="column_select">
+									{% for header in headers %}
+										<option value="{{header['field']}}" data-count="{{loop['index']}}">{{header['field']}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="block-content block-content-full block-content-sm text-end border-top">
+							<button type="button" class="btn btn-alt-secondary" data-bs-dismiss="modal">
+								Close
+							</button>
+							<button class="btn btn-alt-primary" id="send_sms_btn">
+								Send SMS
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	 <script>
+		     var rows_array=[];
+			  $(".send_sms").click(function(){
+		          $("#row_id").val($(this).attr("data-id"));
+				  $("#qr_code").val($(this).attr("data-qr_code"));
+				  {% for header in headers %}
+				  rows_array[{{loop['index']}}] = $(this).attr("data-row_{{loop['index']}}");
+				  {% endfor %}
+				  $("#column_select").change();
+			  });
+
+			  $("#column_select").change(function(){
+			     var current_val = $(this).find(':selected').attr('data-count');
+                 $("#phone").val(rows_array[current_val]);
+			  });
+
+			   $(".send_email").click(function(){
+		          $("#row_id_email").val($(this).attr("data-id"));
+				  $("#qr_code_email").val($(this).attr("data-qr_code"));
+				  {% for header in headers %}
+				  rows_array[{{loop['index']}}] = $(this).attr("data-row_{{loop['index']}}");
+				  {% endfor %}
+				  $("#column_select_email").change();
+			  });
+
+			  $("#column_select_email").change(function(){
+			     var current_val = $(this).find(':selected').attr('data-count');
+                 $("#email").val(rows_array[current_val]);
+			  });
+
+		
+		
+			$('.edit_column').click(function(){
+						$("#field_name").val($(this).attr("data-field"));
+						$("#sort").val($(this).attr("data-sort"));
+						$("#column_id").val($(this).attr("data-id"));
+						$("#import_id").val($(this).attr("data-import_id"));
+						
+						if($(this).attr("data-export")==1){
+			                $("#is_exportable").prop("checked",true);
+						}else{
+			                $("#is_exportable").prop("checked",false);
+						}
+						
+						if($(this).attr("data-display")==1){
+			                $("#is_displayable").prop("checked",true);
+						}else{
+			                $("#is_displayable").prop("checked",false);
+						}
+			
+						$('#modal-fadein').modal('show');
+					})
+		
+				const phoneInputField = document.querySelector("#phone");
+			   const phoneInput = window.intlTelInput(phoneInputField, {
+			     utilsScript:
+			       "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+			   });
+	         
+			 $("#send_sms_btn").click(function(e){
+				e.preventDefault()
+	           $("#code").val(phoneInput.getSelectedCountryData()['dialCode'])
+			   $("#send_sms_form").submit();
+			 });
+	
+			   
+								</script>
+
 {% endblock %}

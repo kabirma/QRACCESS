@@ -25,6 +25,12 @@ security:
                 check_route: login_check
                 signature_properties: ['id']
 
+            json_login:
+                # api_login is a route we will create below
+                check_path: api_login
+                username_path: email
+                password_path: password
+
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
@@ -36,6 +42,8 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/user, roles: ROLE_USER }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: ROLE_USER }
 
 when@test:
     security:

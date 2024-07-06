@@ -10,9 +10,12 @@
 					{{title}}
 					<small>View</small>
 				</h3>
+				{% if records|length < 1 %}
+				
 				<a href="{{url('add_import',{'groupId':groupId})}}" class="btn btn-alt-primary btn-sm" data-bs-toggle="tooltip" title="Add Files">
 					<i class="fa fa-plus"></i>
 				</a>
+				{% endif %}
 			</div>
 			<div class="block-content block-content-full">
 				<table class="table table-bordered table-striped table-vcenter js-dataTable-buttons">
@@ -20,9 +23,10 @@
 						<tr>
 							<th>S.NO</th>
 							<th>Name</th>
+							<th>Number of Attendees</th>
 							<th>File</th>
-                            <th>Created At</th>
-							<th class="text-center" style="width: 15%;">Action</th>
+							<th>Created At</th>
+							<th class="text-left" style="width: 45%;">Action</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -30,14 +34,25 @@
 							<tr>
 								<td>{{key+1}}</td>
 								<td>{{item.name}}</td>
+								<td>{{item.importRows.count}}</td>
 								<td>
-                                   <a href="{{asset(item.file)}}" class="btn btn-dark btn-sm" download><i class="fa fa-download"></i></a>
-                                </td>
+									<a href="{{asset(item.file)}}" class="btn btn-dark btn-sm" download>
+										<i class="fa fa-download"></i>
+									</a>
+								</td>
 								<td>{{item.CreatedAt.format('d-m-Y, h:i A')}}</td>
 
-								<td class="text-center">
-									<a href="{{url('detail_import',{'importId':item.id})}}"  data-bs-toggle="tooltip" title="View {{item.name}}" class="btn btn-sm btn-dark"><i class="fa fa-eye"></i></a>
-									<button type="button" class="btn btn-sm btn-danger delete" data-route="{{url('delete_import',{'id':item.id})}}"  data-bs-toggle="tooltip" title="Delete {{item.name}}">
+								<td class="text-left">
+									<a href="{{url('edit_import',{'importId':item.id})}}" class="btn btn-success btn-sm  m-1">
+										<i class="fa fa-edit"></i>
+									</a>
+									<a href="{{url('detail_import',{'importId':item.id})}}" data-bs-toggle="tooltip" title="View {{item.name}}" class="btn btn-sm btn-dark m-1">
+										<i class="fa fa-eye"></i>
+									</a>
+									<a href="{{url('single_add_import',{'importId':item.id})}}" data-bs-toggle="tooltip" title="Add Attendees" class="btn btn-sm btn-dark m-1">
+										<i class="fa fa-plus"></i> Add Attendees
+									</a>
+									<button type="button" class="btn btn-sm btn-danger delete  m-1" data-route="{{url('delete_import',{'id':item.id})}}" data-bs-toggle="tooltip" title="Delete {{item.name}}">
 										<i class="fa fa-trash"></i>
 									</button>
 								</td>
@@ -47,7 +62,7 @@
 
 					</tbody>
 				</table>
-				
+
 			</div>
 		</div>
 		<!-- END Dynamic Table with Export Buttons -->

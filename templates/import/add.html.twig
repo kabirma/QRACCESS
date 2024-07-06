@@ -14,21 +14,46 @@
 				</a>
 			</div>
 			<div class="block-content block-content-full">
-				<form action="{{ url('create_import') }}" method="post" enctype='multipart/form-data'>
-
-					<input type="hidden" name="token" value="{{ csrf_token('create_import') }}">
+				<form {% if edit %} action="{{ url('update_import') }}" {% else %} action="{{ url('create_import') }}" {% endif %} method="post" enctype='multipart/form-data'>
+					{% if edit %}
+						<input type="hidden" name="importId" value="{{ import.id }}">
+						<input type="hidden" name="token" value="{{ csrf_token('update_import') }}">
+					{% else %}
+						<input type="hidden" name="token" value="{{ csrf_token('create_import') }}">
+					{% endif %}
 					<input type="hidden" name="groupId" value="{{ groupId }}">
 
 					<div class="form-group">
 						<label for="">Name</label>
-						<input name="name" placeholder="Name" type="text" class="form-control">
+						<input name="name" placeholder="Name" type="text" class="form-control" {% if edit %} value="{{import.name}}" {% endif %}>
 					</div>
+				
+					{% if edit %}
 
-					<div class="form-group">
-						<label class="form-label" for="file-input">File</label>
-						<input class="form-control" name="file" type="file" id="file-input">
-					</div>
+					{% else %}
+						<div class="form-group">
+							<label class="form-label" for="file-input">File</label>
+							<input class="form-control" name="file" type="file" id="file-input">
+						</div>
 
+						<div class="form-group">
+							<label for="">
+								<input name="discard_first_line" type="checkbox" {% if edit %}  {% endif %}>
+								Discard the first line  of the file
+							</label>
+						</div>
+						<div class="form-group">
+							<label for="#contains_qr">
+								<input name="contains_qr" id="contains_qr" type="checkbox" {% if edit %}  {% endif %}>
+								The file contains the QR code
+							</label>
+						</div>
+
+					
+					{% endif %}
+				
+					
+				
 					<div class="form-group text-right">
 						<button class="btn btn-secondary btn-sm">
 							<i class="fa fa-save"></i>

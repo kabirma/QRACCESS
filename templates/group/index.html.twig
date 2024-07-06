@@ -20,9 +20,8 @@
 						<tr>
 							<th>S.NO</th>
 							<th>Name</th>
-							<th>Users</th>
                             <th>Created At</th>
-							<th class="text-center" style="width: 15%;">Action</th>
+							<th class="text-center" style="width: 25%;">Action</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -30,20 +29,20 @@
 							<tr>
 								<td>{{key+1}}</td>
 								<td>{{item.name}}</td>
-								<td>
-                                    {% for user in item.getUser() %}
-                                        <span class="btn btn-primary btn-sm">{{user.username}}</span>
-                                    {% endfor %}
-                                </td>
+							
 								<td>{{item.CreatedAt.format('d-m-Y, h:i A')}}</td>
 
 								<td class="text-center">
+     
+									<a href="{{url('view_import',{'groupId':item.id})}}" data-bs-toggle="tooltip" title="Import File" class="btn btn-dark btn-sm m-1">
+                                        <i class="fa fa-file"></i> Import File
+                                    </a>
 
-									<a href="{{url('edit_group',{'id':item.id})}}" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" title="Edit {{title}}">
+									<a href="{{url('edit_group',{'id':item.id})}}" class="btn btn-sm btn-secondary m-1" data-bs-toggle="tooltip" title="Edit {{title}}">
 										<i class="fa fa-edit"></i>
 									</a>
 
-									<button type="button" class="btn btn-sm btn-danger delete" data-route="{{url('delete_group',{'id':item.id})}}"  data-bs-toggle="tooltip" title="Delete {{item.name}}">
+									<button type="button" class="btn btn-sm btn-danger delete m-1" data-route="{{url('delete_group',{'id':item.id})}}"  data-bs-toggle="tooltip" title="Delete {{item.name}} Group">
 										<i class="fa fa-trash"></i>
 									</button>
 

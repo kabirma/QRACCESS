@@ -16,8 +16,8 @@ class ImportHeader
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Import $import = null;
+    #[ORM\OneToOne]
+    private ?Import $import;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $field = null;
@@ -25,8 +25,20 @@ class ImportHeader
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $created_at = null;
 
-    #[ORM\OneToMany(targetEntity: ImportRow::class, mappedBy: 'header',cascade: ['remove'])]
+    #[ORM\OneToMany(targetEntity: ImportRow::class, mappedBy: 'header')]
     private Collection $importRows;
+
+    #[ORM\Column(length: 255)]
+    private ?string $sort = null;
+
+    #[ORM\Column]
+    private ?bool $is_exportable = null;
+
+    #[ORM\Column]
+    private ?bool $is_displayable = null;
+
+    #[ORM\Column]
+    private ?bool $contains_qr = null;
 
 
     public function __construct()
@@ -107,6 +119,54 @@ class ImportHeader
                 $importRow->setHeader(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSort(): ?string
+    {
+        return $this->sort;
+    }
+
+    public function setSort(string $sort): static
+    {
+        $this->sort = $sort;
+
+        return $this;
+    }
+
+    public function isIsExportable(): ?bool
+    {
+        return $this->is_exportable;
+    }
+
+    public function setIsExportable(bool $is_exportable): static
+    {
+        $this->is_exportable = $is_exportable;
+
+        return $this;
+    }
+
+    public function isIsDisplayable(): ?bool
+    {
+        return $this->is_displayable;
+    }
+
+    public function setIsDisplayable(bool $is_displayable): static
+    {
+        $this->is_displayable = $is_displayable;
+
+        return $this;
+    }
+
+    public function isContainsQr(): ?bool
+    {
+        return $this->contains_qr;
+    }
+
+    public function setContainsQr(bool $contains_qr): static
+    {
+        $this->contains_qr = $contains_qr;
 
         return $this;
     }

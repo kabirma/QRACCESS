@@ -26,14 +26,16 @@ class Import
     private ?\DateTimeInterface $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'imports')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
+    private ?User $user;
 
     #[ORM\ManyToOne(inversedBy: 'imports')]
-    private ?Group $groups = null;
+    private ?Group $groups;
 
     #[ORM\OneToMany(targetEntity: ImportRow::class, mappedBy: 'import', cascade: ['remove'])]
     private Collection $importRows;
+
+    #[ORM\OneToMany(targetEntity: ImportHeader::class, mappedBy: 'import', cascade: ['remove'])]
+    private Collection $importHeaders;
 
     public function __construct()
     {
@@ -131,6 +133,37 @@ class Import
             // set the owning side to null (unless already changed)
             if ($importRow->getImport() === $this) {
                 $importRow->setImport(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, ImportHeader>
+     */
+    public function getImportHeaders(): Collection
+    {
+        return $this->importHeaders;
+    }
+
+    public function addImportHeader(ImportHeader $importHeader): static
+    {
+        if (!$this->importHeader->contains($importHeader)) {
+            $this->importHeader->add($importHeader);
+            $importHeader->setImport($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImportHeader(ImportHeader $importHeader): static
+    {
+        if ($this->importHeader->removeElement($importHeader)) {
+            // set the owning side to null (unless already changed)
+            if ($importHeader->getImport() === $this) {
+                $importHeader->setImport(null);
             }
         }
 

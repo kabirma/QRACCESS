@@ -59,11 +59,16 @@ class AuthController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-
+            $user->setActive(1);
+            $user->setUsername($request->get('username'));
+            $user->setRoles(["ROLE_USER"]);
             $entityManager->persist($user);
             $entityManager->flush();
-
-            return $this->redirectToRoute('dashboard');
+            $this->addFlash(
+                'success',
+                'Register Successfully!'
+            );
+            return $this->redirectToRoute('login');
         }
 
         return $this->render('auth/register.html.twig', [
@@ -81,12 +86,11 @@ class AuthController extends AbstractController
     }
 
     #[Route('profile/update', name: 'update_profile', methods: ['POST'])]
-    public function update($id, Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher)
+    public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher)
     {
         $submittedToken = $request->get('token');
         if ($this->isCsrfTokenValid('update_profile', $submittedToken)) {
-
-            $user = $entityManager->getRepository(User::class)->find($id);
+            $user = $entityManager->getRepository(User::class)->find($this->getUser()->getId());
             $user->setUsername($request->get('username'));
             $user->setEmail($request->get('email'));
             $user->setPassword(

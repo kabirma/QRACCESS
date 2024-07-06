@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<style>
+.edit_column{
+	cursor: pointer;
+}
+</style>
+	<div class="content">
+		<h2 class="content-heading">{{title}}</h2>
+
+		<div class="block block-rounded">
+			<div class="block-header block-header-default">
+				<h3 class="block-title">
+					{{title}}
+				</h3>
+				
+			</div>
+			<div class="block-content block-content-full">
+			
+
+			</div>
+		</div>
+		<!-- END Dynamic Table with Export Buttons -->
+	</div>
+	<div class="modal fade" id="modal-fadein" tabindex="-1" aria-labelledby="modal-fadein" style="display: none;" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<form method="post" action="{{ url('update_columns') }}">
+				<input type="hidden" name="token" value="{{ csrf_token('update_columns') }}">
+				<input type="hidden" name="column_id" id="column_id">
+				<input type="hidden" name="import_id" id="import_id">
+
+				<div class="modal-content">
+					<div class="block block-rounded shadow-none mb-0">
+						<div class="block-header block-header-default">
+							<h3 class="block-title">Terms &amp; Conditions</h3>
+							<div class="block-options">
+								<button type="button" class="btn-block-option" data-bs-dismiss="modal" aria-label="Close">
+									<i class="fa fa-times"></i>
+								</button>
+							</div>
+						</div>
+						<div class="block-content fs-sm">
+							<div class="form-group mb-2">
+								<label>Column Name</label>
+								<input type="text" name="field" placeholder="Field Name" id="field_name" class="form-control">
+							</div>
+							<div class="form-group mb-2">
+								<label>Sort</label>
+								<select class="form-control" name="sort" id="sort">
+									{% for sortItem in sort_array %}
+										<option>{{sortItem}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="block-content block-content-full block-content-sm text-end border-top">
+							<button type="button" class="btn btn-alt-secondary" data-bs-dismiss="modal">
+								Close
+							</button>
+							<button class="btn btn-alt-primary">
+								Update
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	 <script>
+			$('.edit_column').click(function(){
+				$("#field_name").val($(this).attr("data-field"));
+				$("#sort").val($(this).attr("data-sort"));
+				$("#column_id").val($(this).attr("data-id"));
+				$("#import_id").val($(this).attr("data-import_id"));
+				$('#modal-fadein').modal('show');
+			})
+	</script>
+
+
+{% endblock %}

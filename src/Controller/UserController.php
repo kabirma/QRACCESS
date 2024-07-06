@@ -24,27 +24,39 @@ class UserController extends AbstractController
         $this->userPasswordHasher = $userPasswordHasher;
     }
 
-    #[Route('admin/user', name: 'view_user')]
-    public function index()
+    #[Route('administrator/role/user', name: 'view_user')]
+    public function view_user()
     {
-        $title = "User";
-        $users = $this->em->getRepository(User::class)->createQueryBuilder('u')->where('u.roles like :role')->setParameter('role', '%ROLE_USER%')->getQuery()->getResult();
+        $title = "Users";
+        if($this->getUser()->getId() == 1){
+            $users = $this->em->getRepository(User::class)->createQueryBuilder('u')->where('u.roles like :role')->setParameter('role', '%ROLE_USER%')->getQuery()->getResult();
+        }else{
+            $users = $this->em->getRepository(User::class)->createQueryBuilder('u')->where('u.roles like :role')->setParameter('role', '%ROLE_USER%')->andWhere('u.admin_id = :userId')->setParameter('userId',$this->getUser()->getId())->getQuery()->getResult();
+        }
         return $this->render('user/index.html.twig', array('title' => $title, 'records' => $users));
     }
 
-    #[Route('admin/user/add', name: 'add_user')]
+    #[Route('administrator/role/admin', name: 'view_admin')]
+    public function view_admin()
+    {
+        $title = "Admins";
+        $users = $this->em->getRepository(User::class)->createQueryBuilder('u')->where('u.roles like :role')->setParameter('role', '%ROLE_ADMIN%')->andWhere('u.id != :userId')->setParameter('userId', 1)->getQuery()->getResult();
+        return $this->render('user/index.html.twig', array('title' => $title, 'records' => $users));
+    }
+
+    #[Route('administrator/user/add', name: 'add_user')]
     public function add()
     {
         $title = 'Add User';
         return $this->render('user/add.html.twig', ['title' => $title]);
     }
 
-    #[Route('admin/user/create', name: 'create_user', methods: ['POST'])]
+    #[Route('administrator/user/create', name: 'create_user', methods: ['POST'])]
     public function create(Request $request)
     {
         $submittedToken = $request->get('token');
         if ($this->isCsrfTokenValid('create_user', $submittedToken)) {
-
+          
             $user = new User();
             $user->setUsername($request->get('username'));
             $user->setEmail($request->get('email'));
@@ -54,7 +66,12 @@ class UserController extends AbstractController
                     $request->get('password')
                 )
             );
-            $user->setRoles(['ROLE_USER']);
+            $user->setRoles([$request->get('user_type')]);
+            if($request->get('user_type')=='ROLE_USER'){
+                $admin_id = $this->getUser()->getId();
+                $admin = $this->em->getRepository(User::class)->find($admin_id);
+                $user->setAdminId($admin);
+            }
             $user->setActive(1);
             $this->em->persist($user);
             $this->em->flush();
@@ -72,7 +89,7 @@ class UserController extends AbstractController
         return $this->redirectToRoute('add_user');
     }
 
-    #[Route('admin/user/edit/{id}', name: 'edit_user', methods: ['GET'])]
+    #[Route('administrator/user/edit/{id}', name: 'edit_user', methods: ['GET'])]
     public function edit($id)
     {
         $title = "Edit User";
@@ -118,7 +135,7 @@ class UserController extends AbstractController
         return $this->redirectToRoute('view_user');
     }
 
-    #[Route('admin/user/delete/{id}', name: 'delete_user', methods: ['GET'])]
+    #[Route('administrator/user/delete/{id}', name: 'delete_user', methods: ['GET'])]
     public function delete($id)
     {
         $user = $this->em->getRepository(User::class)->find($id);

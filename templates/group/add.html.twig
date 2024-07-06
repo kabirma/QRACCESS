@@ -24,7 +24,8 @@
 						<label for="">Name</label>
 						<input name="name" placeholder="Name" {% if group is defined %} value="{{group.v}}" {% endif %} type="text" class="form-control">
 					</div>
-                    <div class="form-group">
+					<input type="hidden" value="{{app.user.id}}" name="users[]">
+                    {# <div class="form-group">
                       <label class="form-label" for="users">Users <span class="text-danger">*</span></label>
                       <select class="select2 form-select" id="users" name="users[]" style="width: 100%;" multiple data-placeholder="Add Users..">
                         <option></option>
@@ -32,7 +33,7 @@
                             <option value="{{user.id}}">{{user.username}}</option>
                         {% endfor %}
                       </select>
-                    </div>
+                    </div> #}
 					<div class="form-group text-right">
 						<button class="btn btn-secondary btn-sm">
 							<i class="fa fa-save"></i>

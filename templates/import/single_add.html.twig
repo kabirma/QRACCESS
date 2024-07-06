@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="content">
+		<h2 class="content-heading">{{title}}</h2>
+
+		<div class="block block-rounded">
+			<div class="block-header block-header-default">
+				<h3 class="block-title">
+					{{title}}
+				</h3>
+
+			</div>
+			<div class="block-content block-content-full">
+				<form {% if edit %} action="{{ url('single_update_import') }}" {% else %} action="{{ url('single_create_import') }}" {% endif %} method="post" enctype='multipart/form-data'>
+
+					{% if edit %}
+						<input type="hidden" name="token" value="{{ csrf_token('single_update_import') }}">
+						<input type="hidden" name="rowId" value="{{ row.id }}">
+					{% else %}
+						<input type="hidden" name="token" value="{{ csrf_token('single_create_import') }}">
+					{% endif %}
+					<input type="hidden" name="headerId" value="{{ header.id }}">
+					<input type="hidden" name="importId" value="{{ header.import.id }}">
+					
+                    {% set count = 0 %}
+					{% for field in fields %}
+						<div class="form-group">
+							<label for="">{{ field|capitalize }}</label>
+							<input name="data[{{field}}]" {% if edit %} value="{{records[count]}}" {% endif %} placeholder="Enter {{ field|capitalize }}" type="text" class="form-control">
+						</div>
+						{% set count = count + 1 %}
+					{% endfor %}
+
+					<div class="form-group text-right">
+						<button class="btn btn-secondary btn-sm">
+							<i class="fa fa-save"></i>
+							Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!-- END Dynamic Table with Export Buttons -->
+	</div>
+{% endblock %}

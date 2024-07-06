@@ -18,9 +18,10 @@ class DashboardController extends AbstractController
         $this->em = $entityManagerInterface;
     }
     // Dashboard
-    #[Route('admin/dashboard', name: 'dashboard')]
+    #[Route('administrator/dashboard', name: 'dashboard')]
     public function dashboard()
     {
+        
         $user = $this->em->getRepository(User::class)->count();
         $group = $this->em->getRepository(Group::class)->count();
         $import = $this->em->getRepository(Import::class)->count();

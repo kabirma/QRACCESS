@@ -37,6 +37,7 @@
 		<!-- Codebase framework -->
 		<link rel="stylesheet" href="{{asset('assets/js/plugins/select2/css/select2.css') }}">
 		<link rel="stylesheet" id="css-main" href="{{ asset('assets/css/codebase.min.css') }}">
+		<script src="https://js.stripe.com/v3/"></script>
 
 		<!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
 		<!-- <link rel="stylesheet" id="css-theme" href="assets/css/themes/flat.min.css"> -->
@@ -61,16 +62,16 @@
 
 			<!-- Sidebar -->
 			<!--
-																																							                Helper classes
-																																							        
-																																							                Adding .smini-hide to an element will make it invisible (opacity: 0) when the sidebar is in mini mode
-																																							                Adding .smini-show to an element will make it visible (opacity: 1) when the sidebar is in mini mode
-																																							                    If you would like to disable the transition, just add the .no-transition along with one of the previous 2 classes
-																																							        
-																																							                Adding .smini-hidden to an element will hide it when the sidebar is in mini mode
-																																							                Adding .smini-visible to an element will show it only when the sidebar is in mini mode
-																																							                Adding 'smini-visible-block' to an element will show it (display: block) only when the sidebar is in mini mode
-																																							            -->
+																																																                Helper classes
+																																																        
+																																																                Adding .smini-hide to an element will make it invisible (opacity: 0) when the sidebar is in mini mode
+																																																                Adding .smini-show to an element will make it visible (opacity: 1) when the sidebar is in mini mode
+																																																                    If you would like to disable the transition, just add the .no-transition along with one of the previous 2 classes
+																																																        
+																																																                Adding .smini-hidden to an element will hide it when the sidebar is in mini mode
+																																																                Adding .smini-visible to an element will show it only when the sidebar is in mini mode
+																																																                Adding 'smini-visible-block' to an element will show it (display: block) only when the sidebar is in mini mode
+																																																            -->
 				<nav
 				id="sidebar"> <!-- Sidebar Content -->
 				<div
@@ -124,7 +125,7 @@
 								</a>
 								<ul class="list-inline mt-3 mb-0">
 									<li class="list-inline-item">
-										<a class="link-fx text-dual fs-sm fw-semibold text-uppercase" href="{{url('dashboard')}}">{{app.user.getUsername()}}</a>
+										<a class="link-fx text-dual fs-sm fw-semibold text-uppercase" href="{{url('dashboard')}}">{{app.user.getUsername()}} ({{app.user.credits()}})</a>
 									</li>
 									<li
 										class="list-inline-item">
@@ -147,8 +148,7 @@
 						<!-- Side Navigation -->
 						<div class="content-side content-side-full">
 							<ul class="nav-main">
-
-								{% if 'ROLE_USER' in app.user.getRoles() %}
+								{% if 'ROLE_USER' in app.user.roles %}
 									<li class="nav-main-item">
 										<a class="nav-main-link" href="{{url('user_dashboard')}}">
 											<i class="nav-main-link-icon fa fa-house-user"></i>
@@ -163,14 +163,29 @@
 									</li>
 
 									<li class="nav-main-item">
-										<a class="nav-main-link" href="{{url('my_group')}}">
-											<i class="nav-main-link-icon fa fa-users"></i>
-											<span class="nav-main-link-name">My Groups</span>
+										<a class="nav-main-link" href="{{url('buy_view_product')}}">
+											<i class="nav-main-link-icon fa fa-dollar"></i>
+											<span class="nav-main-link-name">Buy Attendees</span>
 										</a>
 									</li>
-								{% endif %}
 
-								{% if 'ROLE_ADMIN' in app.user.getRoles() %}
+									<li class="nav-main-heading">Groups</li>
+									<li class="nav-main-item">
+										<a class="nav-main-link" href="{{url('my_group')}}">
+											<i class="nav-main-link-icon fa fa-user"></i>
+											<span class="nav-main-link-name">View Group</span>
+										</a>
+									</li>
+
+									<li class="nav-main-item">
+										<a class="nav-main-link" href="{{url('add_group')}}">
+											<i class="nav-main-link-icon fa fa-user"></i>
+											<span class="nav-main-link-name">Add Group</span>
+										</a>
+									</li>
+
+								{% else %}
+								
 
 									<li class="nav-main-item">
 										<a class="nav-main-link" href="{{url('dashboard')}}">
@@ -179,45 +194,41 @@
 										</a>
 									</li>
 									<li class="nav-main-heading">Users</li>
-									<li class="nav-main-item">
-										<a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-											<i class="nav-main-link-icon fa fa-user"></i>
-											<span class="nav-main-link-name">Users</span>
-										</a>
-										<ul class="nav-main-submenu">
+									
 											<li class="nav-main-item">
 												<a class="nav-main-link" href="{{ url('view_user') }}">
-													<span class="nav-main-link-name">View</span>
+											<i class="nav-main-link-icon fa fa-house-user"></i>
+													<span class="nav-main-link-name">View Users</span>
 												</a>
 											</li>
+											{% if app.user.getId()==1 %}											
+											<li class="nav-main-item">
+												<a class="nav-main-link" href="{{ url('view_admin') }}">
+											<i class="nav-main-link-icon fa fa-user"></i>
+
+													<span class="nav-main-link-name">View Admins</span>
+												</a>
+											</li>
+											{% endif %}
+
 											<li class="nav-main-item">
 												<a class="nav-main-link" href="{{ url('add_user') }}">
-													<span class="nav-main-link-name">Add</span>
+											<i class="nav-main-link-icon fa fa-plus"></i>
+													<span class="nav-main-link-name">Add Admins/Users</span>
 												</a>
 											</li>
-										</ul>
-									</li>
+									
 
-									<li class="nav-main-heading">Groups</li>
-									<li class="nav-main-item">
-										<a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-											<i class="nav-main-link-icon fa fa-users"></i>
-											<span class="nav-main-link-name">Groups</span>
-										</a>
-										<ul class="nav-main-submenu">
-											<li class="nav-main-item">
-												<a class="nav-main-link" href="{{ url('view_group') }}">
-													<span class="nav-main-link-name">View</span>
-												</a>
-											</li>
-											<li class="nav-main-item">
-												<a class="nav-main-link" href="{{ url('add_group') }}">
-													<span class="nav-main-link-name">Add</span>
-												</a>
-											</li>
-										</ul>
-									</li>
+								
 								{% endif %}
+								<li class="nav-main-heading">Users</li>
+								<li class="nav-main-item">
+									<a class="nav-main-link" href="{{ url('view_transactions') }}">
+										<i class="nav-main-link-icon fa fa-dollar"></i>
+										<span class="nav-main-link-name">View Transactions</span>
+									</a>
+								</li>
+								
 
 							</ul>
 						</div>
@@ -425,11 +436,11 @@
 		<!-- END Page Container -->
 
 		<!--
-																										            Codebase JS
-																										    
-																										            Core libraries and functionality
-																										            webpack is putting everything together at assets/_js/main/app.js
-																										        -->
+																																            Codebase JS
+																																    
+																																            Core libraries and functionality
+																																            webpack is putting everything together at assets/_js/main/app.js
+																																        -->
 		<script src="{{ asset('assets/js/codebase.app.min.js') }}"></script>
 
 		<!-- jQuery (required for DataTables plugin) -->
@@ -465,29 +476,25 @@
 		{% block script %}{% endblock %}
 
 		<script>
-			$(".select2").select2();{% for label, messages in app.flashes(['success','danger', 'warning']) %}{% for message in messages %}
-swal('{{ label|upper }}!', '{{ message }}', '{{ label }}');{% endfor %}{% endfor %}
-
-
-$(document).on('click', '.delete', function (e) {
-var route = $(this).attr("data-route");
-swal({
-title: "Are you sure?",
-text: "You won't be able to revert this back!",
-icon: "warning",
-showCancelButton: true,
-confirmButtonColor: "#3085d6",
-cancelButtonColor: "#d33",
-confirmButtonText: "Yes, delete it!",
-dangerMode: true
-}).then(function (isConfirm) {
-if (isConfirm) {
-window.location.href = route;
-} else {
-swal("Cancelled", "Your imaginary file is safe :)", "error");
-}
-})
-});
+			$(".select2").select2();{% for label, messages in app.flashes(['success','danger', 'warning']) %}{% for message in messages %}swal('{{ label|upper }}!', '{{ message }}', '{{ label }}');{% endfor %}{% endfor %}$(document).on('click', '.delete', function (e) {
+			var route = $(this).attr("data-route");
+			swal({
+			title: "Are you sure?",
+			text: "You won't be able to revert this back!",
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#3085d6",
+			cancelButtonColor: "#d33",
+			confirmButtonText: "Yes, delete it!",
+			dangerMode: true
+			}).then(function (isConfirm) {
+			if (isConfirm) {
+			window.location.href = route;
+			} else {
+			swal("Cancelled", "Your imaginary file is safe :)", "error");
+			}
+			})
+			});
 		</script>
 	</body>
 </html>

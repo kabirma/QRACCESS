@@ -34,9 +34,11 @@
 								<td>{{item.CreatedAt.format('d-m-Y, h:i A')}}</td>
 
 								<td class="text-center">
-									<a href="{{url('login_user',{'loginId':item.id})}}" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" title="Login as {{item.username}}">
-										<i class="fa fa-arrow-right"></i>
-									</a>
+									{% if 'ROLE_USER' in item.roles %}
+										<a href="{{url('login_user',{'loginId':item.id})}}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" title="Login as {{item.username}}">
+											<i class="fa fa-arrow-right"></i>
+										</a>
+									{% endif %}
 
 									<a href="{{url('edit_user',{'id':item.id})}}" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" title="Edit {{title}}">
 										<i class="fa fa-edit"></i>
@@ -45,8 +47,6 @@
 									<button type="button" class="btn btn-sm btn-danger delete" data-route="{{url('delete_user',{'id':item.id})}}"  data-bs-toggle="tooltip" title="Delete {{item.username}}">
 										<i class="fa fa-trash"></i>
 									</button>
-
-
 								</td>
 							</tr>
 

@@ -25,8 +25,14 @@ class ImportRow
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $created_at = null;
 
-    #[ORM\ManyToOne(inversedBy: 'importRows',cascade:['remove'])]
+    #[ORM\ManyToOne(inversedBy: 'importRows')]
     private ?ImportHeader $header = null;
+
+    #[ORM\Column]
+    private ?bool $contain_qr = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $qr_code = null;
 
     public function __construct()
     {
@@ -89,6 +95,30 @@ class ImportRow
     public function setHeader(?ImportHeader $header): static
     {
         $this->header = $header;
+
+        return $this;
+    }
+
+    public function isContainQr(): ?bool
+    {
+        return $this->contain_qr;
+    }
+
+    public function setContainQr(bool $contain_qr): static
+    {
+        $this->contain_qr = $contain_qr;
+
+        return $this;
+    }
+
+    public function getQrCode(): ?string
+    {
+        return $this->qr_code;
+    }
+
+    public function setQrCode(?string $qr_code): static
+    {
+        $this->qr_code = $qr_code;
 
         return $this;
     }
